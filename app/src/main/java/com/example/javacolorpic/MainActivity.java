@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     SeekBar sk_red,sk_green,sk_blue;
     ImageView img;
@@ -59,56 +59,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
 
-        sk_green.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeColor();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        sk_blue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeColor();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        sk_red.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeColor();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+      sk_red.setOnSeekBarChangeListener(this);
+      sk_blue.setOnSeekBarChangeListener(this);
+      sk_green.setOnSeekBarChangeListener(this);
     }
 
     private void init(){
@@ -124,11 +77,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeColor(){
         img.setColorFilter(Color.rgb(sk_red.getProgress(),sk_green.getProgress(),sk_blue.getProgress()));
-        tv_red.setText(sk_red.getProgress()+"");
         String hex = "#" +
-                Integer.toHexString(0xFF & sk_red.getProgress()) +
-                Integer.toHexString(0xFF & sk_green.getProgress()) +
-                Integer.toHexString(0xFF & sk_blue.getProgress());
+                (
+                        (0xFF & sk_red.getProgress()) < 16
+                        ? "0"+(Integer.toHexString(0xFF & sk_red.getProgress()))
+                        :(Integer.toHexString(0xFF & sk_red.getProgress()))
+                ) +
+                (
+                        (0xFF & sk_green.getProgress()) < 16
+                        ?"0"+(Integer.toHexString(0xFF & sk_green.getProgress()))
+                        :(Integer.toHexString(0xFF & sk_green.getProgress()))
+                ) +
+                (
+                        (0xFF & sk_blue.getProgress()) < 16
+                        ?"0"+(Integer.toHexString(0xFF & sk_blue.getProgress()))
+                        :(Integer.toHexString(0xFF & sk_blue.getProgress()))
+                );
         tv_hex.setText(hex.toUpperCase());
+        tv_red.setText(sk_red.getProgress()+"");
+        tv_green.setText(sk_green.getProgress()+"");
+        tv_blue.setText(sk_blue.getProgress()+"");
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        changeColor();
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }
